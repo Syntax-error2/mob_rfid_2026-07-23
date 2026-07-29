@@ -16,12 +16,11 @@
                       <tbody>
                       
                             <?php
-                            
-                            $staff_query = $conn->query("SELECT * FROM personnels WHERE do_id='$_GET[dept]' AND ((separation_date='' OR separation_date='  /  /    ')) ORDER BY lname, fname ASC") or die(mysql_error());
-                            while ($staff_row = $staff_query->fetch()){
-                                
-                            $personnel_id=$staff_row['personnel_id'];
-                            
+                            try {
+                                $stmt = $conn->prepare("SELECT * FROM personnels WHERE do_id = :dept_id AND ((separation_date='' OR separation_date='  /  /    ')) ORDER BY lname, fname ASC");
+                                $stmt->execute([':dept_id' => $_GET['dept'] ?? '']);
+                                while ($staff_row = $stmt->fetch()) {
+                                    $personnel_id=$staff_row['personnel_id'];
                             ?>
            
                         <tr>
@@ -72,7 +71,11 @@
                            
                         </tr>
                         
-                        <?php } ?>
+                        <?php }
+                            } catch (Exception $e) {
+                                echo '<tr><td colspan="4" class="text-danger text-center"><i class="fa fa-exclamation-triangle"></i> Error loading personnel data.</td></tr>';
+                            }
+                        ?>
                          
                       </tbody>
                       

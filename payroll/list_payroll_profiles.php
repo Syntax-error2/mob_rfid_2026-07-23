@@ -323,37 +323,38 @@ $page_title = "Payroll Profiles (Templates)";
                         
                         <div class="profile-actions mt-3">
                             <button class="btn btn-success btn-sm" 
-                                    onclick="generatePayroll(<?php echo $profile['profile_id']; ?>)"
+                                    onclick="generatePayroll(<?php echo $profile['profile_id']; ?>, this)"
                                     title="Generate payroll from this template">
                                 <i class="fa fa-play"></i> Generate Payroll
                             </button>
                             
-                            <a href="view_payroll_profile.php?profile_id=<?php echo $profile['profile_id']; ?>" 
-                               class="btn btn-info btn-sm" title="View details">
+                            <button class="btn btn-info btn-sm" 
+                                    onclick="window.location.href='view_payroll_profile.php?profile_id=<?php echo $profile['profile_id']; ?>';"
+                                    title="View details">
                                 <i class="fa fa-eye"></i> View
-                            </a>
+                            </button>
                             
                             <button class="btn btn-warning btn-sm" 
-                                    onclick="editProfile(<?php echo $profile['profile_id']; ?>)"
+                                    onclick="editProfile(<?php echo $profile['profile_id']; ?>, this)"
                                     title="Edit profile">
                                 <i class="fa fa-pencil"></i> Edit
                             </button>
                             
                             <button class="btn btn-secondary btn-sm" 
-                                    onclick="cloneProfile(<?php echo $profile['profile_id']; ?>)"
+                                    onclick="cloneProfile(<?php echo $profile['profile_id']; ?>, this)"
                                     title="Clone this profile">
                                 <i class="fa fa-files-o"></i> Clone
                             </button>
                             
                             <?php if ($profile['is_active']): ?>
                                 <button class="btn btn-warning btn-sm" 
-                                        onclick="toggleStatus(<?php echo $profile['profile_id']; ?>, 0)"
+                                        onclick="toggleStatus(<?php echo $profile['profile_id']; ?>, 0, this)"
                                         title="Deactivate">
                                     <i class="fa fa-toggle-on"></i>
                                 </button>
                             <?php else: ?>
                                 <button class="btn btn-success btn-sm" 
-                                        onclick="toggleStatus(<?php echo $profile['profile_id']; ?>, 1)"
+                                        onclick="toggleStatus(<?php echo $profile['profile_id']; ?>, 1, this)"
                                         title="Activate">
                                     <i class="fa fa-toggle-off"></i>
                                 </button>
@@ -361,7 +362,7 @@ $page_title = "Payroll Profiles (Templates)";
                             
                             <?php if (!$profile['is_default']): ?>
                                 <button class="btn btn-danger btn-sm" 
-                                        onclick="deleteProfile(<?php echo $profile['profile_id']; ?>)"
+                                        onclick="deleteProfile(<?php echo $profile['profile_id']; ?>, this)"
                                         title="Delete profile">
                                     <i class="fa fa-trash"></i>
                                 </button>
@@ -476,25 +477,30 @@ $page_title = "Payroll Profiles (Templates)";
 <?php include('scripts_files.php'); ?>
 
 <script>
-function generatePayroll(profileId) {
+function generatePayroll(profileId, btn) {
     if (confirm('Generate a new payroll run from this profile?')) {
+        $(btn).prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Loading...');
         window.location.href = 'generate_payroll_from_profile.php?profile_id=' + profileId;
     }
 }
 
-function editProfile(profileId) {
+function editProfile(profileId, btn) {
+    $(btn).prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Loading...');
     window.location.href = 'view_payroll_profile.php?profile_id=' + profileId + '&mode=edit';
 }
 
-function cloneProfile(profileId) {
+function cloneProfile(profileId, btn) {
     if (confirm('Clone this profile to create a new one?')) {
+        $(btn).prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Cloning...');
         window.location.href = 'clone_payroll_profile.php?profile_id=' + profileId;
     }
 }
 
-function toggleStatus(profileId, newStatus) {
+function toggleStatus(profileId, newStatus, btn) {
     const action = newStatus === 1 ? 'activate' : 'deactivate';
     if (confirm(`Are you sure you want to ${action} this profile?`)) {
+        let oldHtml = $(btn).html();
+        $(btn).prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
         $.post('update_profile_status.php', {
             profile_id: profileId,
             is_active: newStatus
@@ -502,25 +508,31 @@ function toggleStatus(profileId, newStatus) {
             if (response.success) {
                 location.href = '?successMsg=' + encodeURIComponent('Profile status updated successfully');
             } else {
+                $(btn).prop('disabled', false).html(oldHtml);
                 showToast('Error', response.message, 'error');
             }
         }, 'json').fail(function() {
+            $(btn).prop('disabled', false).html(oldHtml);
             showToast('Error', 'Failed to update profile status', 'error');
         });
     }
 }
 
-function deleteProfile(profileId) {
+function deleteProfile(profileId, btn) {
     if (confirm('WARNING: This will permanently delete this profile. Continue?')) {
+        let oldHtml = $(btn).html();
+        $(btn).prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
         $.post('delete_payroll_profile.php', {
             profile_id: profileId
         }, function(response) {
             if (response.success) {
                 location.href = '?successMsg=' + encodeURIComponent('Profile deleted successfully');
             } else {
+                $(btn).prop('disabled', false).html(oldHtml);
                 showToast('Error', response.message, 'error');
             }
         }, 'json').fail(function() {
+            $(btn).prop('disabled', false).html(oldHtml);
             showToast('Error', 'Failed to delete profile', 'error');
         });
     }

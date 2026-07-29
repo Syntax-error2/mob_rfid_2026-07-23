@@ -311,6 +311,7 @@ $page_title = "Generate Payroll from Profile";
                                     FROM personnels p
                                     LEFT JOIN dept_offices d ON p.do_id = d.do_id
                                     LEFT JOIN designation des ON p.des_id = des.des_id
+                                    WHERE p.separation_date = '' OR p.separation_date = '  /  /    ' OR p.separation_date IS NULL
                                     ORDER BY p.lname, p.fname
                                 ");
                                 while ($person = $personnel_query->fetch(PDO::FETCH_ASSOC)) {

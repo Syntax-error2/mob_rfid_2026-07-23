@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generate_payroll'])) 
         $personnel_query = $conn->prepare("
             SELECT p.personnel_id
             FROM personnels p
-            WHERE 1=1 $where_sql
+            WHERE (p.separation_date = '' OR p.separation_date = '  /  /    ' OR p.separation_date IS NULL) $where_sql
             ORDER BY p.lname, p.fname
         ");
         $personnel_query->execute($personnel_params);
