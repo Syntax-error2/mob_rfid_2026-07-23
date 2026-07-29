@@ -42,7 +42,7 @@ $searched="";
                         <thead>
                           <tr>
                             <th>Action</th>
-                            <th style="text-align: center;"><i class="fa fa-id-badge"></i> RFID<br /><small>ID Code</small></th>
+                            <th style="text-align: center;">Image<br /><small>ID Code</small></th>
                             <th>Fullname</th>
                             <th>Reports</th>
                           </tr>
@@ -72,7 +72,7 @@ $searched="";
                             </td>
                             
                             <td style="text-align: center;">
-                            <i class="fa fa-id-card fa-3x" style="color: #0b5ed7; margin-bottom: 8px; opacity: 0.8;"></i>
+                            <img src="../personnelImg/<?php if($staff_row['img'] != ""){ echo $staff_row['img']; }else{ echo "nss.jpg"; } ?>" width="80" height="80" class="img-fluid rounded" style="margin-bottom: 8px;" />
                             <br />
                             <small><?php echo $staff_row['personnel_id_code']; ?></small>
                             </td>
