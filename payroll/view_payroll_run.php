@@ -104,7 +104,10 @@ include('menu_sidebar.php');
                                 </a>
                             <?php endif; ?>
                             <a href="print_payroll_run.php?run_id=<?php echo $run_id; ?>" target="_blank" class="btn btn-info">
-                                <i class="fa fa-print"></i> Print
+                                <i class="fa fa-print"></i> Print Summary
+                            </a>
+                            <a href="configure_registry.php?run_id=<?php echo $run_id; ?>" class="btn btn-primary">
+                                <i class="fa fa-file-text-o"></i> Print Official Registry
                             </a>
                             <button type="button" class="btn btn-success" onclick="exportToExcel()">
                                 <i class="fa fa-file-excel-o"></i> Export Excel
@@ -116,7 +119,7 @@ include('menu_sidebar.php');
                                 <i class="fa fa-check"></i> Submit for Approval
                             </button>
                         </div>
-                        <?php elseif ($run['run_status'] === 'pending' && ($session_role === 'administrator' || $session_role === 'admin')): ?>
+                        <?php elseif ($run['run_status'] === 'pending' && (strtolower($session_access) === 'administrator' || strtolower($session_access) === 'admin')): ?>
                         <div class="btn-group">
                             <button type="button" class="btn btn-success" onclick="approveRun()">
                                 <i class="fa fa-check-circle"></i> Approve

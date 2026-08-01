@@ -310,3 +310,59 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- View structure for `vw_payroll_run_summary`
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_payroll_run_summary` AS select `pr`.`run_id` AS `run_id`,`pr`.`run_name` AS `run_name`,`pr`.`run_type` AS `run_type`,`pr`.`pay_period_start` AS `pay_period_start`,`pr`.`pay_period_end` AS `pay_period_end`,`pr`.`payment_date` AS `payment_date`,`pr`.`run_status` AS `run_status`,`pr`.`total_personnel` AS `total_personnel`,`pr`.`total_gross` AS `total_gross`,`pr`.`total_deductions` AS `total_deductions`,`pr`.`total_employer_share` AS `total_employer_share`,`pr`.`total_net_pay` AS `total_net_pay`,`pp`.`profile_name` AS `profile_name`,concat(`u1`.`fname`,' ',`u1`.`lname`) AS `created_by_name`,concat(`u2`.`fname`,' ',`u2`.`lname`) AS `approved_by_name`,`pr`.`approved_at` AS `approved_at`,`pr`.`completed_at` AS `completed_at`,`pr`.`created_at` AS `created_at` from (((`pr_tbl_payroll_runs` `pr` left join `pr_tbl_payroll_profiles` `pp` on(`pr`.`profile_id` = `pp`.`profile_id`)) left join `useraccount` `u1` on(`pr`.`created_by` = `u1`.`user_id`)) left join `useraccount` `u2` on(`pr`.`approved_by` = `u2`.`user_id`));
 
+
+
+
+-- Official Registry Signatory Templates
+CREATE TABLE IF NOT EXISTS pr_tbl_signatory_templates (
+    template_id INT AUTO_INCREMENT PRIMARY KEY,
+    template_name VARCHAR(100),
+    is_default TINYINT(1) DEFAULT 0,
+    created_at DATETIME
+);
+
+CREATE TABLE IF NOT EXISTS pr_tbl_signatory_items (
+    item_id INT AUTO_INCREMENT PRIMARY KEY,
+    template_id INT,
+    role_title VARCHAR(150),
+    person_name VARCHAR(150),
+    display_order INT
+);
+
+-- Check if default template exists to avoid duplicates
+SET @existing = (SELECT COUNT(*) FROM pr_tbl_signatory_templates WHERE template_name = 'Standard Official Registry');
+
+-- Only insert if it doesn't exist
+INSERT INTO pr_tbl_signatory_templates (template_name, is_default, created_at)
+SELECT 'Standard Official Registry', 1, NOW()
+WHERE @existing = 0;
+
+SET @last_id = LAST_INSERT_ID();
+
+INSERT INTO pr_tbl_signatory_items (template_id, role_title, person_name, display_order)
+SELECT @last_id, 'Prepared By', 'HR Officer', 1
+WHERE @existing = 0 AND @last_id > 0;
+
+INSERT INTO pr_tbl_signatory_items (template_id, role_title, person_name, display_order)
+SELECT @last_id, 'Certified: Service duly rendered as stated', 'Municipal Mayor', 2
+WHERE @existing = 0 AND @last_id > 0;
+
+INSERT INTO pr_tbl_signatory_items (template_id, role_title, person_name, display_order)
+SELECT @last_id, 'Approved for Payment', 'Municipal Mayor', 3
+WHERE @existing = 0 AND @last_id > 0;
+
+INSERT INTO pr_tbl_signatory_items (template_id, role_title, person_name, display_order)
+SELECT @last_id, 'Certified: Each employee whose name appears on the payroll has been paid the amount as indicated', '', 4
+WHERE @existing = 0 AND @last_id > 0;
+
+INSERT INTO pr_tbl_signatory_items (template_id, role_title, person_name, display_order)
+SELECT @last_id, 'Accounting Entries', '', 5
+WHERE @existing = 0 AND @last_id > 0;
+
+INSERT INTO pr_tbl_signatory_items (template_id, role_title, person_name, display_order)
+SELECT @last_id, 'Certified: Cash available for the purpose', 'Municipal Accountant', 6
+WHERE @existing = 0 AND @last_id > 0;
+
+INSERT INTO pr_tbl_signatory_items (template_id, role_title, person_name, display_order)
+SELECT @last_id, 'Certified Correct:', 'Head of Treasury Division/Unit', 7
+WHERE @existing = 0 AND @last_id > 0;

@@ -223,6 +223,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generate_payroll'])) 
             $personnel_deductions = 0;
             $personnel_employer_share = 0;
             
+            // Get personnel's actual monthly rate (stored in rate_per_day column)
+            $get_rate = $conn->prepare("SELECT rate_per_day FROM personnels WHERE personnel_id = :id");
+            $get_rate->execute([':id' => $personnel_id]);
+            $personnel_rate_row = $get_rate->fetch(PDO::FETCH_ASSOC);
+            $personnel_monthly_rate = $personnel_rate_row ? floatval($personnel_rate_row['rate_per_day']) : 0;
+            
             // Calculate income for this personnel
             $personnel_income_data = [];
             
@@ -247,8 +253,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generate_payroll'])) 
                         // Use personnel-specific amount
                         $amount = floatval($amount_row['amount_per_pay']);
                     } else {
-                        // Fall back to profile default amount if no personnel-specific data
-                        $amount = floatval($income_item['default_amount'] ?? 0);
+                        // If it's Basic Salary, use the personnel's profile rate!
+                        if (stripos($income_item['income_title'], 'Basic Salary') !== false) {
+                            $amount = $personnel_monthly_rate;
+                        } else {
+                            // Fall back to profile default amount if no personnel-specific data
+                            $amount = floatval($income_item['default_amount'] ?? 0);
+                        }
                     }
                 } elseif ($income_item['amount_calculation'] === 'fixed') {
                     // Use default fixed amount
