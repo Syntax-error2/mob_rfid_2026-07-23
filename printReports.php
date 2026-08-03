@@ -145,6 +145,139 @@
               </div>
               <!-- kinder End-->
               
+              <!-- Custom Personnel Report Form -->
+              <div id="custom-report-card" class="card updates recent-updated mt-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <h2 class="h5 display">
+                  <a data-toggle="collapse" href="#customReportBox" aria-expanded="true"><strong style="font-weight: bold !important;">CUSTOM PERSONNEL REPORT</strong></a>
+                  </h2><a data-toggle="collapse" href="#customReportBox" aria-expanded="true"><i class="fa fa-angle-down"></i></a>
+                </div>
+                <div id="customReportBox" role="tabpanel" class="collapse show">
+                  <form action="printPersonnelCustomReport.php" method="POST" target="_blank">
+                    <div style="margin: 15px;" class="form-group row">
+                      <div class="col-lg-12">
+                        
+                        <div class="row mb-4">
+                          <div class="col-md-4">
+                            <label style="font-weight: bold;">Grouping Options</label>
+                            <select name="group_by" class="form-control">
+                              <option value="mixed">Mixed (Alphabetical)</option>
+                              <option value="male_only">Male Only</option>
+                              <option value="female_only">Female Only</option>
+                              <option value="department">Group By Department</option>
+                              <option value="employment_status">Group By Employment Status</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <label style="font-weight: bold; margin-bottom: 10px; display: block;">Select Columns to Display:</label>
+                        <div class="row">
+                          <div class="col-md-3 mb-2">
+                            <div class="i-checks">
+                              <input id="col_fullname" type="checkbox" value="1" checked disabled class="checkbox-template">
+                              <label for="col_fullname">Full Name (Default)</label>
+                              <input type="hidden" name="cols[]" value="fullname">
+                            </div>
+                          </div>
+                          <div class="col-md-3 mb-2">
+                            <div class="i-checks">
+                              <input id="col_sex" name="cols[]" type="checkbox" value="sex" class="checkbox-template">
+                              <label for="col_sex">Sex</label>
+                            </div>
+                          </div>
+                          <div class="col-md-3 mb-2">
+                            <div class="i-checks">
+                              <input id="col_age" name="cols[]" type="checkbox" value="age" class="checkbox-template">
+                              <label for="col_age">Age</label>
+                            </div>
+                          </div>
+                          <div class="col-md-3 mb-2">
+                            <div class="i-checks">
+                              <input id="col_dob" name="cols[]" type="checkbox" value="dob" class="checkbox-template">
+                              <label for="col_dob">Date of Birth</label>
+                            </div>
+                          </div>
+                          
+                          <div class="col-md-3 mb-2">
+                            <div class="i-checks">
+                              <input id="col_pob" name="cols[]" type="checkbox" value="pob" class="checkbox-template">
+                              <label for="col_pob">Place of Birth</label>
+                            </div>
+                          </div>
+                          <div class="col-md-3 mb-2">
+                            <div class="i-checks">
+                              <input id="col_address" name="cols[]" type="checkbox" value="address" class="checkbox-template">
+                              <label for="col_address">Home Address</label>
+                            </div>
+                          </div>
+                          <div class="col-md-3 mb-2">
+                            <div class="i-checks">
+                              <input id="col_contact" name="cols[]" type="checkbox" value="contact" class="checkbox-template">
+                              <label for="col_contact">Contact Number</label>
+                            </div>
+                          </div>
+                          <div class="col-md-3 mb-2">
+                            <div class="i-checks">
+                              <input id="col_email" name="cols[]" type="checkbox" value="email" class="checkbox-template">
+                              <label for="col_email">Email</label>
+                            </div>
+                          </div>
+
+                          <div class="col-md-3 mb-2">
+                            <div class="i-checks">
+                              <input id="col_department" name="cols[]" type="checkbox" value="department" class="checkbox-template">
+                              <label for="col_department">Department / Office</label>
+                            </div>
+                          </div>
+                          <div class="col-md-3 mb-2">
+                            <div class="i-checks">
+                              <input id="col_designation" name="cols[]" type="checkbox" value="designation" class="checkbox-template">
+                              <label for="col_designation">Designation</label>
+                            </div>
+                          </div>
+                          <div class="col-md-3 mb-2">
+                            <div class="i-checks">
+                              <input id="col_emp_status" name="cols[]" type="checkbox" value="emp_status" class="checkbox-template">
+                              <label for="col_emp_status">Employment Status</label>
+                            </div>
+                          </div>
+                          <div class="col-md-3 mb-2">
+                            <div class="i-checks">
+                              <input id="col_salary_grade" name="cols[]" type="checkbox" value="salary_grade" class="checkbox-template">
+                              <label for="col_salary_grade">Salary Grade / Step</label>
+                            </div>
+                          </div>
+                          
+                          <div class="col-md-3 mb-2">
+                            <div class="i-checks">
+                              <input id="col_monthly_salary" name="cols[]" type="checkbox" value="monthly_salary" class="checkbox-template">
+                              <label for="col_monthly_salary">Monthly Salary</label>
+                            </div>
+                          </div>
+                          <div class="col-md-3 mb-2">
+                            <div class="i-checks">
+                              <input id="col_date_hired" name="cols[]" type="checkbox" value="date_hired" class="checkbox-template">
+                              <label for="col_date_hired">Date Hired</label>
+                            </div>
+                          </div>
+                          <div class="col-md-3 mb-2">
+                            <div class="i-checks">
+                              <input id="col_separation_date" name="cols[]" type="checkbox" value="separation_date" class="checkbox-template">
+                              <label for="col_separation_date">Separation Date</label>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary"><i class="fa fa-print"></i> Print Preview</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <!-- Custom Report End -->
+              
               
               
             </div>

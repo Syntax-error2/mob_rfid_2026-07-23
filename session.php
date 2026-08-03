@@ -59,6 +59,7 @@ $schoolName = $sf_row['schoolName'];
  
 $check_pass = $user_row['password'];
 
+// Auto-update personnel age and years in service if a new calendar year has started
+include('auto_update_stats.php');
  
-
 ?>
